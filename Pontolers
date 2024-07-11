@@ -92,7 +92,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                     end
                 end
 
-                wait(0.5)
+                wait(0.3)
             end
         end)
     else
