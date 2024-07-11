@@ -71,10 +71,23 @@ local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
     if v.Toggle then
         toggle2Enabled = true
         spawn(function()
+            local stoolsAndTables = {
+                "HighStool1", "HighStool2", "HighStool3",
+                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
+                "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
+            }
+
             while toggle2Enabled do
-                wait(0.5)
-                
-                local function checkAndCleanTrash(stoolName)
+                -- Shuffle the list for random order checking
+                for i = #stoolsAndTables, 2, -1 do
+                    local j = math.random(1, i)
+                    stoolsAndTables[i], stoolsAndTables[j] = stoolsAndTables[j], stoolsAndTables[i]
+                end
+
+                local promptFired = false
+
+                -- Check for CleanTrash prompt in any stool or table
+                for _, stoolName in ipairs(stoolsAndTables) do
                     local stool = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"][stoolName]
                     if stool then
                         local trash = stool:FindFirstChild("Trash")
@@ -82,39 +95,18 @@ local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                             local cleanTrashPrompt = trash:FindFirstChild("PromptPart") and trash.PromptPart:FindFirstChild("CleanTrash")
                             if cleanTrashPrompt then
                                 fireproximityprompt(cleanTrashPrompt, 1, true)
-                                return true
+                                promptFired = true
+                                break
                             end
                         end
                     end
-                    return false
                 end
-                
-                -- List of stools and tables to check
-                local stoolsAndTables = {
-                    "HighStool1", "HighStool2", "HighStool3",
-                    "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
-                    "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
-                }
-                
-                -- Shuffle the list for random order checking
-                for i = #stoolsAndTables, 2, -1 do
-                    local j = math.random(1, i)
-                    stoolsAndTables[i], stoolsAndTables[j] = stoolsAndTables[j], stoolsAndTables[i]
-                end
-                
-                local promptFired = false
-                
-                -- Check for CleanTrash prompt in any stool or table
-                for _, stoolName in ipairs(stoolsAndTables) do
-                    promptFired = checkAndCleanTrash(stoolName)
-                    if promptFired then
-                        break
-                    end
-                end
-                
+
                 if not promptFired then
                     print("No CleanTrash prompt found in any stools or tables.")
                 end
+
+                wait(0.5)
             end
         end)
     else
