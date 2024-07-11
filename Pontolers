@@ -87,7 +87,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                             if trash then
                                 local cleanTrashPrompt = trash:FindFirstChild("PromptPart") and trash.PromptPart:FindFirstChild("CleanTrash")
                                 if cleanTrashPrompt and trash.PromptPart and (trash.PromptPart.Position - playerPos).Magnitude <= 10 then
-                                    fireproximityprompt(cleanTrashPrompt, 1, true)
+                                    fireproximityprompt(cleanTrashPrompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
                                     print("CleanTrash prompt fired for " .. stoolName)
                                     break
                                 end
@@ -116,15 +116,30 @@ sector1.element('Toggle', 'Auto Customer HandItem', false, function(v)
     if toggleCustomerHandItem then
         spawn(function()
             while toggleCustomerHandItem do
-                local customer = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"]:GetChildren()[44].Customer
-                if customer then
-                    local handItem = customer.HumanoidRootPart.HandItem
-                    if handItem then
-                        -- Perform actions with handItem here
-                        -- Example: fireproximityprompt(handItem.Prompt, 1, true)
-                        print("HandItem detected and action performed.")
+                local player = game.Players.LocalPlayer
+                local playerPos = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position
+
+                if playerPos then
+                    local tycoon = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"]
+                    for _, building in ipairs(tycoon:GetChildren()) do
+                        for _, party in ipairs(building:GetChildren()) do
+                            local customer = party:FindFirstChild("Customer")
+                            if customer then
+                                local humanoidRootPart = customer:FindFirstChild("HumanoidRootPart")
+                                if humanoidRootPart then
+                                    local handItem = humanoidRootPart:FindFirstChild("HandItem")
+                                    if handItem then
+                                        -- Perform actions with handItem here
+                                        fireproximityprompt(handItem.Prompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
+                                        print("HandItem detected and action performed.")
+                                        break  -- Only interact with the first found HandItem
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
+
                 wait(0.5)
             end
         end)
