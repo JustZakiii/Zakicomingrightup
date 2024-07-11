@@ -82,7 +82,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                             local trash = stool:FindFirstChild("Trash")
                             if trash then
                                 local cleanTrashPrompt = trash:FindFirstChild("PromptPart") and trash.PromptPart:FindFirstChild("CleanTrash")
-                                if cleanTrashPrompt and (cleanTrashPrompt.Position - playerPos).Magnitude <= 10 then
+                                if cleanTrashPrompt and trash.PromptPart and (trash.PromptPart.Position - playerPos).Magnitude <= 10 then
                                     fireproximityprompt(cleanTrashPrompt, 1, true)
                                     print("CleanTrash prompt fired for " .. stoolName)
                                     break
