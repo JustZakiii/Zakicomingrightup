@@ -1,0 +1,126 @@
+-- Load library
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/cueshut/saves/main/criminality%20paste%20ui%20library'))()
+
+-- Constants for easier access
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TycoonService")
+local RF = Knit:WaitForChild("RF")
+local RE = Knit:WaitForChild("RE")
+
+-- // Window \\ --
+local window = library.new('Coffee Shop Tycoon', 'leadmarker')
+
+-- // Tabs \\ --
+local tab = window.new_tab('rbxassetid://4483345998')
+local tab1 = window.new_tab('rbxassetid://4483345998')
+
+-- // Sections \\ --
+local section = tab.new_section('Tab 1')
+local section1 = tab.new_section('Tab 2')
+
+-- // Sector \\ --
+local sector = section.new_sector('Essentials', 'Left')
+local sector1 = section.new_sector('Others', 'Right')
+
+-- Flag to control printing
+local shouldPrintMessage = true
+
+-- Function to invoke server function
+local function invokeServerFunction(functionName)
+    local args = {
+        [1] = functionName
+    }
+    RF:WaitForChild("InvokeTopic"):InvokeServer(unpack(args))
+end
+
+-- // Elements \\ -- (Type, Name, State, Callback)
+
+-- Refill Quick button
+local button = sector.element('Button', 'Refill Quick', nil, function()
+    invokeServerFunction("Bakery1_Restock")
+    invokeServerFunction("CoffeeBeans_Restock")
+    invokeServerFunction("ToppingStock_Restock")
+end)
+
+-- Toggle 1: Auto Add Toppings
+local isRunning = false
+local toggle1 = sector.element('Toggle', 'Auto Add Toppings', false, function(v)
+    if v.Toggle then
+        if not isRunning then
+            isRunning = true
+            spawn(function()
+                while isRunning do
+                    for _, station in ipairs({"ToppingStation1", "ToppingStation2", "ToppingStation3"}) do
+                        for i = 1, 30 do
+                            invokeServerFunction(station .. "_DroppedTopping")
+                        end
+                    end
+                    wait(0.5)
+                end
+            end)
+        end
+    else
+        isRunning = false
+        print("Toggle turned off, function disabled")
+    end
+end)
+
+-- Toggle 2: Auto Clean Trash
+local toggle2Enabled = true
+local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
+    if v.Toggle then
+        toggle2Enabled = true
+        spawn(function()
+            while toggle2Enabled do
+                wait(0.5)
+                
+                -- Function to check and clean trash prompts
+                local function checkAndCleanTrash(stoolName)
+                    local stool = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"][stoolName]
+                    if stool then
+                        local trash = stool:FindFirstChild("Trash")
+                        if trash then
+                            local cleanTrashPrompt = trash:FindFirstChild("PromptPart") and trash.PromptPart:FindFirstChild("CleanTrash")
+                            if cleanTrashPrompt then
+                                fireproximityprompt(cleanTrashPrompt, 1, true)
+                                return true
+                            end
+                        end
+                    end
+                    return false
+                end
+                
+                -- Check all stools and tables except TwoTable5
+                local stoolsAndTables = {
+                    "HighStool1", "HighStool2", "HighStool3",
+                    "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
+                    "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
+                }
+                local promptFired = false
+                
+                for _, stoolName in ipairs(stoolsAndTables) do
+                    promptFired = checkAndCleanTrash(stoolName)
+                    if promptFired then
+                        break
+                    end
+                end
+                
+                if not promptFired then
+                    print("No CleanTrash prompt found in any stools or tables.")
+                end
+            end
+        end)
+    else
+        toggle2Enabled = false
+        print("Toggle turned off, function disabled")
+    end
+end)
+
+-- Function to enable/disable toggle2
+local function setToggle2Enabled(enabled)
+    toggle2Enabled = enabled
+end
+
+-- Example usage:
+-- setToggle2Enabled(false) -- Disable toggle2
+-- setToggle2Enabled(true)  -- Enable toggle2
