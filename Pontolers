@@ -74,7 +74,6 @@ local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
             while toggle2Enabled do
                 wait(0.5)
                 
-                -- Function to check and clean trash prompts
                 local function checkAndCleanTrash(stoolName)
                     local stool = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"][stoolName]
                     if stool then
@@ -90,14 +89,22 @@ local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                     return false
                 end
                 
-                -- Check all stools and tables except TwoTable5
+                -- List of stools and tables to check
                 local stoolsAndTables = {
                     "HighStool1", "HighStool2", "HighStool3",
                     "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
                     "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
                 }
+                
+                -- Shuffle the list for random order checking
+                for i = #stoolsAndTables, 2, -1 do
+                    local j = math.random(1, i)
+                    stoolsAndTables[i], stoolsAndTables[j] = stoolsAndTables[j], stoolsAndTables[i]
+                end
+                
                 local promptFired = false
                 
+                -- Check for CleanTrash prompt in any stool or table
                 for _, stoolName in ipairs(stoolsAndTables) do
                     promptFired = checkAndCleanTrash(stoolName)
                     if promptFired then
