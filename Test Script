@@ -76,7 +76,7 @@ end)
 
 local toggle2Enabled = true -- Flag to control toggle2 activation
 
-local toggle2 = sector.element('Toggle', 'Example', false, function(v)
+local toggle2 = sector.element('Toggle', 'Auto Clean Trash', false, function(v)
     print(v.Toggle) -- :nerd:
 
     if v.Toggle then
