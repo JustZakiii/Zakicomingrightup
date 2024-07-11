@@ -67,7 +67,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
         spawn(function()
             local stoolsAndTables = {
                 "HighStool1", "HighStool2", "HighStool3",
-                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
+                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4", "TwoTable4", 
                 "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
             }
 
