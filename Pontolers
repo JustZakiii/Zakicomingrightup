@@ -27,6 +27,15 @@ local function invokeServerFunction(functionName)
     RF:WaitForChild("InvokeTopic"):InvokeServer(functionName)
 end
 
+-- Function to fire topping event
+local function fireToppingEvent(toppingNumber)
+    local args = {
+        [1] = "ToppingStation1_DroppedTopping",
+        [2] = toppingNumber
+    }
+    RE:WaitForChild("PublishTopic"):FireServer(unpack(args))
+end
+
 -- Elements
 
 -- Refill Quick button
@@ -44,11 +53,7 @@ sector.element('Toggle', 'Auto Add Toppings', false, function(v)
         spawn(function()
             while isRunning do
                 for i = 1, 30 do
-                    local args = {
-                        [1] = "ToppingStation1_DroppedTopping",
-                        [2] = i
-                    }
-                    RE:WaitForChild("PublishTopic"):FireServer(unpack(args))
+                    fireToppingEvent(i)
                 end
                 wait(0.5)
             end
