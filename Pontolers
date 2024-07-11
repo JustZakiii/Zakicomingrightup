@@ -43,10 +43,12 @@ sector.element('Toggle', 'Auto Add Toppings', false, function(v)
     if isRunning then
         spawn(function()
             while isRunning do
-                for _, station in ipairs({"ToppingStation1", "ToppingStation2", "ToppingStation3"}) do
-                    for i = 1, 30 do
-                        invokeServerFunction(station .. "_DroppedTopping")
-                    end
+                for i = 1, 30 do
+                    local args = {
+                        [1] = "ToppingStation1_DroppedTopping",
+                        [2] = i
+                    }
+                    RE:WaitForChild("PublishTopic"):FireServer(unpack(args))
                 end
                 wait(0.5)
             end
@@ -64,7 +66,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
         spawn(function()
             local stoolsAndTables = {
                 "HighStool1", "HighStool2", "HighStool3",
-                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4", "TwoTable4", 
+                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
                 "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
             }
 
@@ -89,7 +91,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
                     end
                 end
 
-                wait(0.3)
+                wait(0.5)
             end
         end)
     else
