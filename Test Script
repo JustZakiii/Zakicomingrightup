@@ -1,0 +1,143 @@
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/cueshut/saves/main/criminality%20paste%20ui%20library'))()
+
+-- // Window \\ --
+local window = library.new('Coffee Shop Tycoon', 'leadmarker')
+
+-- // Tabs \\ --
+local tab = window.new_tab('rbxassetid://4483345998')
+local tab1 = window.new_tab('rbxassetid://4483345998')
+
+-- // Sections \\ --
+local section = tab.new_section('Tab 1')
+local section1 = tab.new_section('Tab 2')
+
+-- // Sector \\ --
+local sector = section.new_sector('Essentials', 'Left')
+local sector1 = section.new_sector('Others', 'Right')
+
+-- Flag to control printing
+local shouldPrintMessage = true
+
+-- // Elements \\ -- (Type, Name, State, Callback)
+local button = sector.element('Button', 'Refill Quick', nil, function()
+    local args = {
+        [1] = "Bakery1_Restock"
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TycoonService"):WaitForChild("RF"):WaitForChild("InvokeTopic"):InvokeServer(unpack(args))
+
+    local args = {
+        [1] = "CoffeeBeans_Restock"
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TycoonService"):WaitForChild("RF"):WaitForChild("InvokeTopic"):InvokeServer(unpack(args))
+
+    local args = {
+        [1] = "ToppingStock_Restock"
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TycoonService"):WaitForChild("RF"):WaitForChild("InvokeTopic"):InvokeServer(unpack(args))
+end)
+
+local isRunning = false -- Flag to track if the loop is running
+local toggle1 = sector.element('Toggle', 'Auto Add Toppings (need to be in the GUI)', false, function(v)
+    print(v.Toggle) -- :nerd:
+
+    if v.Toggle then
+        if not isRunning then
+            isRunning = true
+            -- Create a loop that runs every 0.5 seconds
+            spawn(function()
+                while isRunning do
+                    local replicatedStorage = game:GetService("ReplicatedStorage")
+                    local publishTopic = replicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TycoonService"):WaitForChild("RE"):WaitForChild("PublishTopic")
+
+                    -- Execute the loop to drop toppings for ToppingStation1, ToppingStation2, ToppingStation3
+                    for _, station in ipairs({"ToppingStation1", "ToppingStation2", "ToppingStation3"}) do
+                        for i = 1, 30 do
+                            local args = {
+                                [1] = station .. "_DroppedTopping",
+                                [2] = i
+                            }
+                            publishTopic:FireServer(unpack(args))
+                        end
+                    end
+
+                    wait(0.5) -- Wait for 0.5 seconds before repeating
+                end
+            end)
+        end
+    else
+        isRunning = false
+        -- Optional: You can add code here to handle stopping actions if needed
+        print("Toggle turned off, function disabled")
+    end
+end)
+
+local toggle2Enabled = true -- Flag to control toggle2 activation
+
+local toggle2 = sector.element('Toggle', 'Example', false, function(v)
+    print(v.Toggle) -- :nerd:
+
+    if v.Toggle then
+        shouldPrintMessage = true  -- Enable the print message
+        toggle2Enabled = true      -- Enable toggle2 action
+
+        -- Create a loop to check and fire the prompts continuously
+        spawn(function()
+            while toggle2Enabled do
+                wait(0.5)
+                
+                -- Function to check for Trash and CleanTrash prompts
+                local function checkTrashAndCleanTrash(stoolName)
+                    local stool = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"][stoolName]
+                    if stool then
+                        local trash = stool:FindFirstChild("Trash")
+                        if trash then
+                            local cleanTrashPrompt = trash:FindFirstChild("PromptPart") and trash.PromptPart:FindFirstChild("CleanTrash")
+                            if cleanTrashPrompt then
+                                fireproximityprompt(cleanTrashPrompt, 1, true)
+                                return true
+                            end
+                        end
+                    end
+                    return false
+                end
+                
+                -- Check for all stools and tables except TwoTable5
+                local stoolsAndTables = {
+                    "HighStool1", "HighStool2", "HighStool3",
+                    "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
+                    "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
+                }
+                local promptFired = false
+                
+                for _, stoolName in ipairs(stoolsAndTables) do
+                    promptFired = checkTrashAndCleanTrash(stoolName)
+                    if promptFired then
+                        break
+                    end
+                end
+                
+                if not promptFired and shouldPrintMessage then
+                    print("No CleanTrash prompt found in any stools or tables.")
+                end
+            end
+        end)
+    else
+        -- Disable the print message when toggled off
+        shouldPrintMessage = false
+        toggle2Enabled = false     -- Disable toggle2 action
+        -- Optional: You can add code here to handle stopping actions if needed
+        print("Toggle turned off, function disabled")
+    end
+end)
+
+-- Function to enable or disable toggle2
+local function setToggle2Enabled(enabled)
+    toggle2Enabled = enabled
+end
+
+-- Example usage:
+-- setToggle2Enabled(false) -- Disable toggle2
+-- setToggle2Enabled(true)  -- Enable toggle2
