@@ -39,22 +39,19 @@ end)
 -- Auto Add Toppings Toggle
 local isRunning = false
 sector.element('Toggle', 'Auto Add Toppings', false, function(v)
-    if v.Toggle then
-        if not isRunning then
-            isRunning = true
-            spawn(function()
-                while isRunning do
-                    for _, station in ipairs({"ToppingStation1", "ToppingStation2", "ToppingStation3"}) do
-                        for i = 1, 30 do
-                            invokeServerFunction(station .. "_DroppedTopping")
-                        end
+    isRunning = v.Toggle
+    if isRunning then
+        spawn(function()
+            while isRunning do
+                for _, station in ipairs({"ToppingStation1", "ToppingStation2", "ToppingStation3"}) do
+                    for i = 1, 30 do
+                        invokeServerFunction(station .. "_DroppedTopping")
                     end
-                    wait(0.5)
                 end
-            end)
-        end
+                wait(0.5)
+            end
+        end)
     else
-        isRunning = false
         print("Auto Add Toppings turned off")
     end
 end)
