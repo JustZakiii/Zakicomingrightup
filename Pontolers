@@ -16,11 +16,11 @@ local tab1 = window.new_tab('rbxassetid://4483345998')
 
 -- Sections
 local section = tab.new_section('Tab 1')
-local section1 = tab.new_section('Tab 2')
+local section1 = tab1.new_section('Tab 2')  -- New tab for the function
 
 -- Sectors
 local sector = section.new_sector('Essentials', 'Left')
-local sector1 = section.new_sector('Others', 'Right')
+local sector1 = section1.new_sector('Customer HandItem', 'Left')  -- New sector for the function
 
 -- Function to invoke server function
 local function invokeServerFunction(functionName)
@@ -109,6 +109,37 @@ local function setToggle2Enabled(enabled)
     toggle2Enabled = enabled
 end
 
+-- Auto Customer HandItem Toggle
+local toggleCustomerHandItem = false
+sector1.element('Toggle', 'Auto Customer HandItem', false, function(v)
+    toggleCustomerHandItem = v.Toggle
+    if toggleCustomerHandItem then
+        spawn(function()
+            while toggleCustomerHandItem do
+                local customer = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"]:GetChildren()[44].Customer
+                if customer then
+                    local handItem = customer.HumanoidRootPart.HandItem
+                    if handItem then
+                        -- Perform actions with handItem here
+                        -- Example: fireproximityprompt(handItem.Prompt, 1, true)
+                        print("HandItem detected and action performed.")
+                    end
+                end
+                wait(0.5)
+            end
+        end)
+    else
+        print("Auto Customer HandItem turned off")
+    end
+end)
+
+-- Function to enable/disable Auto Customer HandItem
+local function setToggleCustomerHandItem(enabled)
+    toggleCustomerHandItem = enabled
+end
+
 -- Example usage:
 -- setToggle2Enabled(false) -- Disable toggle2
 -- setToggle2Enabled(true)  -- Enable toggle2
+-- setToggleCustomerHandItem(false) -- Disable toggleCustomerHandItem
+-- setToggleCustomerHandItem(true)  -- Enable toggleCustomerHandItem
