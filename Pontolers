@@ -111,19 +111,16 @@ sector1.element('Toggle', 'Auto Customer HandItem', false, function(v)
 
                 if playerPos then
                     local tycoon = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"]
-                    for _, building in ipairs(tycoon:GetChildren()) do
-                        if building.Name == "Party" then
-                            local customer = building:FindFirstChild("Customer")
-                            if customer then
-                                local humanoidRootPart = customer:FindFirstChild("HumanoidRootPart")
-                                if humanoidRootPart then
-                                    local handItem = humanoidRootPart:FindFirstChild("HandItem")
-                                    if handItem then
-                                        -- Perform actions with handItem here
-                                        fireproximityprompt(handItem.Prompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
-                                        print("HandItem detected and action performed.")
-                                        break  -- Only interact with the first found HandItem
-                                    end
+                    for _, part in ipairs(tycoon:GetDescendants()) do
+                        if part:IsA("Model") and part:FindFirstChild("HumanoidRootPart") then
+                            local humanoidRootPart = part.HumanoidRootPart
+                            local handItem = humanoidRootPart:FindFirstChild("HandItem")
+                            if handItem then
+                                local handItemPrompt = handItem:FindFirstChild("Prompt")
+                                if handItemPrompt and (humanoidRootPart.Position - playerPos).Magnitude <= 10 then
+                                    fireproximityprompt(handItemPrompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
+                                    print("HandItem prompt fired for " .. handItem:GetFullName())
+                                    break
                                 end
                             end
                         end
