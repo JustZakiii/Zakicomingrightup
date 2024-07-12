@@ -118,8 +118,13 @@ sector1.element('Toggle', 'Auto Customer HandItem', false, function(v)
                             if handItem then
                                 local handItemPrompt = handItem:FindFirstChild("Prompt")
                                 if handItemPrompt and (humanoidRootPart.Position - playerPos).Magnitude <= 10 then
-                                    fireproximityprompt(handItemPrompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
-                                    print("HandItem prompt fired for " .. handItem:GetFullName())
+                                    local backpack = player.Backpack
+                                    if backpack:FindFirstChild("Coffee") then
+                                        fireproximityprompt(handItemPrompt, 0, true)  -- Hold duration set to 0 for instantaneous firing
+                                        print("HandItem prompt fired for " .. handItem:GetFullName())
+                                    else
+                                        print("Oopsie Whoopsie you don't have any Coffee, make some first.")
+                                    end
                                     break
                                 end
                             end
@@ -139,6 +144,31 @@ end)
 local function setToggleCustomerHandItem(enabled)
     toggleCustomerHandItem = enabled
 end
+
+-- New Combined Toggle for HandItem and CleanTrash (near)
+local player = game.Players.LocalPlayer
+local tycoonName = player.Name .. "'s Tycoon"
+local toggleHandClean = false
+sector1.element('Toggle', 'A. HandItem & CleanTrash (near)', false, function(v)
+    toggleHandClean = v.Toggle
+    if toggleHandClean then
+        spawn(function()
+            while toggleHandClean do
+                task.wait(0.2)
+                pcall(function()
+                    for _, v in pairs(game.Workspace.Map.Tycoons.PlayerTycoons[tycoonName]:GetDescendants()) do
+                        if v.Name == "HandItem" or v.Name == "CleanTrash" then
+                            v.MaxActivationDistance = 20
+                            fireproximityprompt(v, 0, true)  -- Hold duration set to 0 for instantaneous firing
+                        end
+                    end
+                end)
+            end
+        end)
+    else
+        print("Auto HandItem & CleanTrash (near) turned off")
+    end
+end)
 
 -- Example usage:
 -- setToggle2Enabled(false) -- Disable toggle2
