@@ -72,7 +72,7 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
             local stoolsAndTables = {
                 "HighStool1", "HighStool2", "HighStool3", "HighStool4", "HighStool5", "HighStool6", "HighStool7", "HighStool8",
                 "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4", "TwoTable5", "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11",
-                "Table1", "Table2", "Table3", "Table4", "Table5", "Table6"
+                "Table1", "Table2", "Table3", "Table4", "Table6"
             }
 
             while toggle2Enabled do
