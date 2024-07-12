@@ -70,9 +70,9 @@ sector.element('Toggle', 'Auto Clean Trash', false, function(v)
     if toggle2Enabled then
         spawn(function()
             local stoolsAndTables = {
-                "HighStool1", "HighStool2", "HighStool3",
-                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4",
-                "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11"
+                "HighStool1", "HighStool2", "HighStool3", "HighStool4", "HighStool5", "HighStool6", "HighStool7", "HighStool8",
+                "TwoTable1", "TwoTable2", "TwoTable3", "TwoTable4", "TwoTable5", "TwoTable6", "TwoTable7", "TwoTable8", "TwoTable9", "TwoTable10", "TwoTable11",
+                "Table1", "Table2", "Table3", "Table4", "Table5", "Table6"
             }
 
             while toggle2Enabled do
@@ -122,8 +122,8 @@ sector1.element('Toggle', 'Auto Customer HandItem', false, function(v)
                 if playerPos then
                     local tycoon = game.Workspace.Map.Tycoons.PlayerTycoons["xXalzaki4themasterXx's Tycoon"]
                     for _, building in ipairs(tycoon:GetChildren()) do
-                        for _, party in ipairs(building:GetChildren()) do
-                            local customer = party:FindFirstChild("Customer")
+                        if building.Name == "Party" then
+                            local customer = building:FindFirstChild("Customer")
                             if customer then
                                 local humanoidRootPart = customer:FindFirstChild("HumanoidRootPart")
                                 if humanoidRootPart then
